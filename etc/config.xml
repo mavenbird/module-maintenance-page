@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mavenbird_maintenancepage>
+
+            <general>
+                <enabled>0</enabled>
+                <redirect_to_page>maintenance</redirect_to_page>
+                <end_date_time></end_date_time>
+                <auto_switch>0</auto_switch>
+                <whitelist_ips></whitelist_ips>
+                <whitelist_page_links></whitelist_page_links>
+                <http_response_header>503</http_response_header>
+            </general>
+
+            <maintenance_page>
+                <page_title>We'll Be Back Soon!</page_title>
+                <page_description>Our store is currently under maintenance. We apologize for the inconvenience.</page_description>
+                <text_color>#ffffff</text_color>
+                <background_type>color</background_type>
+                <background_color>#1a1a2e</background_color>
+                <background_image></background_image>
+                <background_video></background_video>
+                <logo_url></logo_url>
+                <progress_bar_enabled>1</progress_bar_enabled>
+                <progress_bar_value>50</progress_bar_value>
+                <progress_bar_color>#1C84EB</progress_bar_color>
+            </maintenance_page>
+
+            <coming_soon_page>
+                <page_title>Coming Soon</page_title>
+                <page_description>Our new site is coming soon. Stay tuned!</page_description>
+                <text_color>#000000</text_color>
+                <background_type>color</background_type>
+                <background_color>#ffffff</background_color>
+                <background_image></background_image>
+                <background_video></background_video>
+                <logo_url></logo_url>
+                <progress_bar_enabled>0</progress_bar_enabled>
+                <progress_bar_value>0</progress_bar_value>
+                <progress_bar_color>#1C84EB</progress_bar_color>
+            </coming_soon_page>
+
+            <clock>
+                <enabled>1</enabled>
+                <style>modern</style>
+                <background_color>#ffffff</background_color>
+                <number_color>#000000</number_color>
+                <label_color>#ffffff</label_color>
+            </clock>
+
+            <subscribe>
+                <enabled>1</enabled>
+                <subscription_type>newsletter</subscription_type>
+                <description></description>
+                <description_text_color>#000000</description_text_color>
+                <button_label>Subscribe</button_label>
+                <button_text_color>#ffffff</button_text_color>
+                <button_background_color>#000000</button_background_color>
+            </subscribe>
+
+            <social>
+                <enabled>1</enabled>
+                <label>Contact us via</label>
+                <label_color>#000000</label_color>
+                <facebook></facebook>
+                <twitter></twitter>
+                <instagram></instagram>
+                <google_plus></google_plus>
+                <youtube></youtube>
+                <pinterest></pinterest>
+            </social>
+
+        </mavenbird_maintenancepage>
+    </default>
+</config>

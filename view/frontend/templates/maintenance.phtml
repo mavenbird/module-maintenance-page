@@ -1,0 +1,614 @@
+<?php
+/** @var \Mavenbird\MaintenancePage\Block\Maintenance $block */
+$title       = $block->escapeHtml($block->getPageTitle());
+$desc        = $block->escapeHtml($block->getPageDescription());
+$textColor   = $block->escapeHtmlAttr($block->getTextColor());
+$bgType      = $block->getBackgroundType();
+$bgColor     = $block->escapeHtmlAttr($block->getBackgroundColor());
+$bgImage     = $block->escapeUrl($block->getBackgroundImage());
+$bgVideo     = $block->escapeUrl($block->getBackgroundVideo());
+$logoUrl     = $block->escapeUrl($block->getLogoUrl());
+$endTs       = (int)$block->getEndTimestamp();
+$clockStyle  = $block->escapeHtmlAttr($block->getClockStyle());
+$clockBg     = $block->escapeHtmlAttr($block->getClockBgColor());
+$clockNum    = $block->escapeHtmlAttr($block->getClockNumberColor());
+$clockLabel  = $block->escapeHtmlAttr($block->getClockLabelColor());
+$progressVal = (int)$block->getProgressValue();
+$progressClr = $block->escapeHtmlAttr($block->getProgressColor());
+$btnLabel    = $block->escapeHtml($block->getSubscribeBtnLabel());
+$btnTxtClr   = $block->escapeHtmlAttr($block->getSubscribeBtnTextColor());
+$btnBgClr    = $block->escapeHtmlAttr($block->getSubscribeBtnBgColor());
+$descClr     = $block->escapeHtmlAttr($block->getSubscribeDescColor());
+$subDesc     = $block->escapeHtml($block->getSubscribeDescription());
+$subUrl      = $block->escapeUrl($block->getSubscribeUrl());
+$socialLabel = $block->escapeHtml($block->getSocialLabel());
+$socialClr   = $block->escapeHtmlAttr($block->getSocialLabelColor());
+$socialLinks = $block->getSocialLinks();
+
+if ($bgType === 'image' && $bgImage) {
+    $bgStyle = "background-image:url('{$bgImage}');background-size:cover;background-position:center;";
+} elseif ($bgType === 'color' && $bgColor) {
+    $bgStyle = "background-color:{$bgColor};";
+} else {
+    $bgStyle = "background: linear-gradient(135deg, #b8d4e8 0%, #cde4f5 50%, #daeeff 100%);";
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title><?= $title ?></title>
+<style>
+/* ── RESET ───────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;margin:0!important;padding:0!important}
+
+/* Hide Magento chrome */
+.page-wrapper,.page-header,.nav-sections,.nav-toggle,
+.page-footer,.breadcrumbs,.page-messages,
+.page-title-wrapper,.page-title,h1.page-title,
+.columns,.column.main,.sidebar,.page-main,
+header.page-header,footer.page-footer,
+.page-bottom,.copyright,.panel.header,
+.panel.wrapper,.sections.nav-sections,.navigation{display:none!important}
+
+/* ── PAGE ────────────────────────────────────────────────── */
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    position:relative;
+    overflow:hidden;
+}
+
+/* ── BG VIDEO ────────────────────────────────────────────── */
+.mv-bg-video{
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    object-fit:cover;z-index:-1;
+}
+
+/* ── FLOATING BLOBS (page bg) ────────────────────────────── */
+.mv-blobs{
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    pointer-events:none;z-index:0;overflow:hidden;
+}
+.mv-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,0.30);filter:blur(2px)}
+.mv-blob-1{width:180px;height:110px;top:8%; left:5%}
+.mv-blob-2{width:130px;height:80px; top:18%;left:20%}
+.mv-blob-3{width:110px;height:65px; top:6%; right:10%}
+.mv-blob-4{width:220px;height:65px; bottom:12%;left:3%; opacity:.18}
+.mv-blob-5{width:170px;height:55px; bottom:18%;right:5%; opacity:.18}
+
+/* ── MAIN CARD ───────────────────────────────────────────── */
+.mv-card{
+    position:relative;z-index:10;
+    width:min(92vw, 860px);
+    background:rgba(255,255,255,0.14);
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,0.35);
+    backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);
+    box-shadow:0 28px 80px rgba(0,0,0,0.14);
+    overflow:hidden;
+    animation:mvFadeIn .7s ease both;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ── ILLUSTRATION AREA (top half of card) ────────────────── */
+.mv-illo{
+    width:100%;
+    /* Fixed height so illustration never overflows */
+    height:280px;
+    flex-shrink:0;
+    overflow:hidden;
+    position:relative;
+}
+.mv-illo svg{
+    width:100%;height:100%;
+    display:block;
+}
+
+/* ── CONTENT AREA (bottom half of card) ─────────────────── */
+.mv-body{
+    padding:28px 48px 36px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+    text-align:center;
+}
+
+/* ── LOGO ────────────────────────────────────────────────── */
+.mv-logo img{max-width:140px;max-height:55px;object-fit:contain}
+
+/* ── TITLE / DESC ────────────────────────────────────────── */
+.mv-title{
+    font-size:clamp(1.5rem,3vw,2.1rem);
+    font-weight:700;
+    letter-spacing:-.3px;
+    line-height:1.2;
+}
+.mv-desc{
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+    line-height: 1.9;
+    opacity: 0.95;
+    max-width: 650px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+}
+
+/* ── COUNTDOWN ───────────────────────────────────────────── */
+.mv-countdown{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+}
+.mv-cd-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+.mv-cd-num{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:84px;height:84px;
+    font-size:2rem;
+    font-weight:700;
+    border-radius:14px;
+    /* fallback bg so numbers always show even if clockBg empty */
+    background:rgba(255,255,255,0.25);
+    box-shadow:0 4px 18px rgba(0,0,0,.12);
+    transition:transform .2s;
+}
+.mv-cd-label{
+    font-size:.6rem;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    opacity:.72;
+}
+
+/* Clock style variants */
+.cs-modern   .mv-cd-num{border-radius:50%;box-shadow:0 6px 22px rgba(0,0,0,.18)}
+.cs-circle   .mv-cd-num{border-radius:50%;border:3px solid currentColor;background:transparent!important}
+.cs-square   .mv-cd-num{border-radius:10px}
+.cs-simple   .mv-cd-num{background:transparent!important;border:2px solid rgba(255,255,255,.55);border-radius:8px;box-shadow:none}
+.cs-stack    .mv-countdown{flex-direction:column;gap:8px}
+.cs-stack    .mv-cd-item{flex-direction:row;justify-content:space-between;background:rgba(255,255,255,.12);border-radius:12px;padding:8px 20px;width:260px}
+.cs-stack    .mv-cd-num{width:70px;height:52px;font-size:1.7rem;border-radius:8px}
+.cs-stack    .mv-cd-label{flex:1;text-align:left;font-size:.7rem}
+
+/* ── PROGRESS ────────────────────────────────────────────── */
+.mv-progress{width:100%;max-width:520px}
+.mv-progress-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.mv-progress-title{font-size:.75rem;font-weight:600;opacity:.72;letter-spacing:.4px}
+.mv-progress-pct{font-size:.82rem;font-weight:700}
+.mv-progress-track{height:11px;background:rgba(255,255,255,.22);border-radius:50px;overflow:hidden}
+.mv-progress-fill{
+    height:100%;border-radius:50px;width:0;
+    transition:width 1.5s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+}
+.mv-progress-fill::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);
+    animation:mvShimmer 2s ease-in-out infinite;
+}
+@keyframes mvShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* ── SUBSCRIBE ───────────────────────────────────────────── */
+.mv-subscribe{width:100%;max-width:520px}
+.mv-sub-desc{font-size:.85rem;margin-bottom:10px;opacity:.87;line-height:1.6}
+.mv-sub-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.mv-sub-input{
+    flex:1;min-width:200px;max-width:300px;
+    padding:11px 20px;
+    border-radius:50px;
+    border:1px solid rgba(255,255,255,.4);
+    background:rgba(255,255,255,.93);
+    font-size:.9rem;color:#333;outline:none;
+}
+.mv-sub-input::placeholder{color:#bbb}
+.mv-sub-btn{
+    padding:11px 26px;border-radius:50px;border:none;
+    font-size:.9rem;font-weight:600;cursor:pointer;
+    transition:opacity .2s,transform .15s;white-space:nowrap;
+}
+.mv-sub-btn:hover{opacity:.87;transform:translateY(-2px)}
+.mv-sub-btn:disabled{opacity:.55;cursor:not-allowed}
+.mv-sub-msg{
+    margin-top:8px;font-size:.82rem;
+    padding:7px 16px;border-radius:8px;display:inline-block;
+}
+.mv-sub-msg.success{background:rgba(22,163,74,.2);color:#86efac;border:1px solid rgba(22,163,74,.3)}
+.mv-sub-msg.error  {background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.3)}
+
+/* ── SOCIAL ──────────────────────────────────────────────── */
+.mv-social-label{
+    display:block;font-size:.75rem;opacity:.72;
+    margin-bottom:8px;letter-spacing:.5px;
+}
+.mv-social-icons{display:inline-flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.mv-social-icon{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:36px;border-radius:50%;color:#fff;text-decoration:none;
+    font-size:.55rem;font-weight:700;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.2);
+    transition:transform .2s,opacity .2s;
+}
+.mv-social-icon:hover{transform:translateY(-3px);opacity:.9}
+.social-facebook  {background:#1877f2}
+.social-twitter   {background:#1da1f2}
+.social-instagram {background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.social-youtube   {background:#ff0000}
+.social-pinterest {background:#e60023}
+.social-google    {background:#4285f4}
+
+/* ── SVG ANIMATIONS ──────────────────────────────────────── */
+@keyframes mvFadeIn  {from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ropeSwing {0%,100%{transform:rotate(0)}40%{transform:rotate(8deg)}70%{transform:rotate(-5deg)}}
+@keyframes gearCW    {from{transform:rotate(0)}  to{transform:rotate(360deg)}}
+@keyframes gearCCW   {from{transform:rotate(0)}  to{transform:rotate(-360deg)}}
+@keyframes workerBob {0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)}}
+@keyframes sparkle   {0%,100%{opacity:0;transform:scale(.3)} 50%{opacity:1;transform:scale(1)}}
+@keyframes cardFloat {0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+@keyframes arrowBob  {0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)}}
+
+.mv-rope    {animation:ropeSwing 3s ease-in-out infinite;transform-origin:244px 24px}
+.mv-load    {animation:ropeSwing 3s ease-in-out infinite;transform-origin:244px 24px}
+.mv-gearA   {animation:gearCW   5s linear infinite;transform-origin:488px 158px}
+.mv-gearB   {animation:gearCCW  3.5s linear infinite;transform-origin:516px 178px}
+.mv-w1      {animation:workerBob 1.4s ease-in-out infinite}
+.mv-w2      {animation:workerBob 1.1s ease-in-out infinite .3s}
+.mv-w3      {animation:workerBob 1.2s ease-in-out infinite .15s}
+.mv-sp1     {animation:sparkle 1.4s ease-in-out infinite}
+.mv-sp2     {animation:sparkle 1.4s ease-in-out infinite .5s}
+.mv-floatCard{animation:cardFloat 3s ease-in-out infinite}
+.mv-arrow   {animation:arrowBob 1.2s ease-in-out infinite}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:860px){
+    .mv-body{padding:22px 32px 28px;gap:14px}
+    .mv-cd-num{width:72px;height:72px;font-size:1.7rem}
+    .mv-illo{height:240px}
+}
+@media(max-width:600px){
+    .mv-illo{height:180px}
+    .mv-body{padding:18px 18px 24px;gap:12px}
+    .mv-cd-num{width:60px;height:60px;font-size:1.4rem}
+    .mv-countdown{gap:8px}
+    .mv-sub-form{flex-direction:column;align-items:stretch}
+    .mv-sub-input{max-width:100%}
+    .mv-sub-btn{width:100%}
+    .cs-stack .mv-cd-item{width:100%}
+}
+</style>
+</head>
+<body style="<?= $bgStyle ?>color:<?= $textColor ?>;">
+
+<?php if ($bgType === 'video' && $bgVideo): ?>
+<video class="mv-bg-video" autoplay muted loop playsinline>
+    <source src="<?= $bgVideo ?>" type="video/mp4"/>
+</video>
+<?php endif; ?>
+
+<!-- Floating page background blobs -->
+<div class="mv-blobs" aria-hidden="true">
+    <div class="mv-blob mv-blob-1"></div>
+    <div class="mv-blob mv-blob-2"></div>
+    <div class="mv-blob mv-blob-3"></div>
+    <div class="mv-blob mv-blob-4"></div>
+    <div class="mv-blob mv-blob-5"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN CARD
+═══════════════════════════════════════════════ -->
+<div class="mv-card">
+
+    <!-- TOP — Illustration -->
+    <div class="mv-illo" aria-hidden="true">
+    <svg viewBox="0 0 860 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+        <linearGradient id="mvBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="#c2d9f0"/>
+            <stop offset="100%" stop-color="#d8eeff"/>
+        </linearGradient>
+        <linearGradient id="mvScreen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#5a90b8"/>
+            <stop offset="100%" stop-color="#3a70a0"/>
+        </linearGradient>
+    </defs>
+
+    <!-- BG -->
+    <rect width="860" height="280" fill="url(#mvBg)"/>
+
+    <!-- Clouds / blobs inside illustration -->
+    <ellipse cx="120" cy="70" rx="80" ry="48" fill="white" opacity=".28"/>
+    <ellipse cx="80"  cy="85" rx="48" ry="30" fill="white" opacity=".20"/>
+    <ellipse cx="760" cy="55" rx="72" ry="38" fill="white" opacity=".22"/>
+    <ellipse cx="185" cy="78" rx="38" ry="22" fill="white" opacity=".16"/>
+    <ellipse cx="680" cy="75" rx="55" ry="30" fill="white" opacity=".16"/>
+
+    <!-- Ground shadow -->
+    <ellipse cx="430" cy="276" rx="310" ry="9" fill="rgba(100,140,180,.18)"/>
+    <ellipse cx="140" cy="274" rx="90"  ry="6" fill="rgba(100,140,180,.12)"/>
+    <ellipse cx="740" cy="274" rx="80"  ry="5" fill="rgba(100,140,180,.12)"/>
+
+    <!-- ═══ CRANE ═══ -->
+    <rect x="388" y="8"  width="10" height="200" rx="4" fill="#8ab0cc"/><!-- pole -->
+    <rect x="290" y="8"  width="108" height="10" rx="4" fill="#8ab0cc"/><!-- arm -->
+    <rect x="388" y="8"  width="42"  height="10" rx="4" fill="#7aa0bc"/><!-- counter arm -->
+    <rect x="415" y="18" width="18"  height="24" rx="4" fill="#6a90ac"/><!-- counterweight -->
+    <line x1="305" y1="18" x2="388" y2="8" stroke="#8ab0cc" stroke-width="2" opacity=".7"/>
+    <line x1="340" y1="18" x2="388" y2="8" stroke="#8ab0cc" stroke-width="1.5" opacity=".5"/>
+
+    <!-- Hanging rope -->
+    <g class="mv-rope">
+        <line x1="320" y1="18" x2="320" y2="110" stroke="#7a9ab8" stroke-width="2"/>
+    </g>
+
+    <!-- Orange load box -->
+    <g class="mv-load">
+        <rect x="302" y="110" width="36" height="28" rx="5" fill="#e8a830"/>
+        <rect x="302" y="110" width="36" height="11" rx="5" fill="#f0bc40"/>
+        <line x1="302" y1="121" x2="338" y2="121" stroke="#c88820" stroke-width="1.2"/>
+        <line x1="320" y1="110" x2="320" y2="138" stroke="#c88820" stroke-width="1.2"/>
+    </g>
+
+    <!-- ═══ LAPTOP ═══ -->
+    <!-- Base & hinge -->
+    <rect x="270" y="272" width="280" height="10" rx="5" fill="#1a4868"/>
+    <rect x="340" y="278" width="140" height="5"  rx="2" fill="#123858"/>
+    <!-- Screen body -->
+    <rect x="290" y="148" width="240" height="128" rx="12" fill="#2a5878"/>
+    <!-- Screen surface -->
+    <rect x="300" y="156" width="220" height="112" rx="8" fill="url(#mvScreen)"/>
+    <!-- Browser bar -->
+    <rect x="306" y="160" width="208" height="20" rx="5" fill="#1e3f5a"/>
+    <circle cx="318" cy="170" r="4.5" fill="#ff6b6b"/>
+    <circle cx="332" cy="170" r="4.5" fill="#ffd93d"/>
+    <circle cx="346" cy="170" r="4.5" fill="#6bcb77"/>
+    <!-- Content lines -->
+    <rect x="308" y="188" width="155" height="9"  rx="4" fill="rgba(255,255,255,.24)"/>
+    <rect x="308" y="202" width="125" height="7"  rx="3" fill="rgba(255,255,255,.15)"/>
+    <rect x="308" y="214" width="140" height="7"  rx="3" fill="rgba(255,255,255,.15)"/>
+    <!-- Target icon -->
+    <circle cx="338" cy="248" r="20" fill="rgba(20,50,80,.55)"/>
+    <circle cx="338" cy="248" r="12" fill="none" stroke="rgba(130,190,230,.85)" stroke-width="3.5"/>
+    <circle cx="338" cy="248" r="5"  fill="rgba(130,190,230,.85)"/>
+    <!-- Arrow -->
+    <g class="mv-arrow">
+        <line x1="410" y1="278" x2="410" y2="246" stroke="#e8a030" stroke-width="4.5" stroke-linecap="round"/>
+        <polygon points="402,252 418,252 410,234" fill="#e8a030"/>
+    </g>
+
+    <!-- ═══ FLOATING CARD (right) ═══ -->
+    <g class="mv-floatCard">
+        <rect x="460" y="140" width="170" height="122" rx="16" fill="rgba(0,0,0,.07)" transform="translate(4,5)"/>
+        <rect x="460" y="140" width="170" height="122" rx="16" fill="white" opacity=".96"/>
+        <rect x="460" y="140" width="170" height="28"  rx="16" fill="#ddeeff"/>
+        <rect x="460" y="156" width="170" height="12"  rx="0"  fill="#ddeeff"/>
+        <circle cx="476" cy="154" r="6" fill="#c0d8f0"/>
+        <circle cx="493" cy="154" r="6" fill="#c0d8f0"/>
+        <circle cx="510" cy="154" r="6" fill="#c0d8f0"/>
+
+        <!-- Big gear -->
+        <g class="mv-gearA">
+            <circle cx="562" cy="155" r="24" fill="none" stroke="#a0b8cc" stroke-width="7"/>
+            <circle cx="562" cy="155" r="9"  fill="#d8eaf8"/>
+            <rect x="559" y="127" width="6" height="12" rx="2" fill="#a0b8cc"/>
+            <rect x="559" y="171" width="6" height="12" rx="2" fill="#a0b8cc"/>
+            <rect x="534" y="152" width="12" height="6" rx="2" fill="#a0b8cc"/>
+            <rect x="578" y="152" width="12" height="6" rx="2" fill="#a0b8cc"/>
+            <rect x="542" y="133" width="12" height="6" rx="2" fill="#a0b8cc" transform="rotate(45,548,136)"/>
+            <rect x="572" y="165" width="12" height="6" rx="2" fill="#a0b8cc" transform="rotate(45,578,168)"/>
+            <rect x="542" y="165" width="12" height="6" rx="2" fill="#a0b8cc" transform="rotate(-45,548,168)"/>
+            <rect x="572" y="133" width="12" height="6" rx="2" fill="#a0b8cc" transform="rotate(-45,578,136)"/>
+        </g>
+
+        <!-- Small gear -->
+        <g class="mv-gearB">
+            <circle cx="592" cy="175" r="15" fill="none" stroke="#a0b8cc" stroke-width="5"/>
+            <circle cx="592" cy="175" r="6"  fill="#d8eaf8"/>
+            <rect x="589" y="157" width="6" height="10" rx="1.5" fill="#a0b8cc"/>
+            <rect x="589" y="183" width="6" height="10" rx="1.5" fill="#a0b8cc"/>
+            <rect x="577" y="172" width="10" height="6" rx="1.5" fill="#a0b8cc"/>
+            <rect x="597" y="172" width="10" height="6" rx="1.5" fill="#a0b8cc"/>
+        </g>
+
+        <!-- Sparkles -->
+        <g class="mv-sp1">
+            <circle cx="620" cy="142" r="4" fill="#ffd93d"/>
+            <line x1="620" y1="134" x2="620" y2="131" stroke="#ffd93d" stroke-width="2"/>
+            <line x1="620" y1="150" x2="620" y2="153" stroke="#ffd93d" stroke-width="2"/>
+            <line x1="612" y1="142" x2="609" y2="142" stroke="#ffd93d" stroke-width="2"/>
+            <line x1="628" y1="142" x2="631" y2="142" stroke="#ffd93d" stroke-width="2"/>
+        </g>
+        <g class="mv-sp2">
+            <circle cx="638" cy="162" r="3" fill="#ffd93d" opacity=".8"/>
+            <line x1="638" y1="157" x2="638" y2="155" stroke="#ffd93d" stroke-width="1.5" opacity=".8"/>
+            <line x1="638" y1="167" x2="638" y2="169" stroke="#ffd93d" stroke-width="1.5" opacity=".8"/>
+            <line x1="633" y1="162" x2="631" y2="162" stroke="#ffd93d" stroke-width="1.5" opacity=".8"/>
+            <line x1="643" y1="162" x2="645" y2="162" stroke="#ffd93d" stroke-width="1.5" opacity=".8"/>
+        </g>
+
+        <!-- Progress bar in card -->
+        <rect x="470" y="228" width="130" height="16" rx="8" fill="#ddeeff"/>
+        <rect x="470" y="228" width="78"  height="16" rx="8" fill="#5a9aba"/>
+        <rect x="549" y="229" width="30"  height="14" rx="5" fill="white" stroke="#5a9aba" stroke-width="1"/>
+        <text x="554" y="240" font-size="8" fill="#5a9aba" font-family="sans-serif" font-weight="bold">55%</text>
+    </g>
+
+    <!-- Dashed connection -->
+    <line x1="510" y1="230" x2="460" y2="215"
+          stroke="rgba(130,180,210,.5)" stroke-width="1.5"
+          stroke-dasharray="5,4"/>
+
+    <!-- ═══ WORKER 1 (left, blue) ═══ -->
+    <g class="mv-w1">
+        <ellipse cx="158" cy="218" rx="17" ry="9" fill="#e8a830"/>
+        <rect x="141" y="222" width="34" height="7" rx="3" fill="#c88820"/>
+        <circle cx="158" cy="233" r="13" fill="#f5d090"/>
+        <rect x="147" y="246" width="22" height="30" rx="5" fill="#3a5a9a"/>
+        <line x1="147" y1="252" x2="130" y2="263" stroke="#3a5a9a" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="124" cy="265" r="10" fill="#8ab0cc" opacity=".9"/>
+        <line x1="169" y1="252" x2="182" y2="260" stroke="#3a5a9a" stroke-width="6" stroke-linecap="round"/>
+        <line x1="150" y1="276" x2="144" y2="290" stroke="#2a3a6a" stroke-width="6" stroke-linecap="round"/>
+        <line x1="165" y1="276" x2="171" y2="290" stroke="#2a3a6a" stroke-width="6" stroke-linecap="round"/>
+        <rect x="136" y="288" width="16" height="8" rx="3" fill="#1a2a4a"/>
+        <rect x="167" y="288" width="16" height="8" rx="3" fill="#1a2a4a"/>
+    </g>
+
+    <!-- ═══ WORKER 2 (centre, orange) ═══ -->
+    <g class="mv-w2">
+        <ellipse cx="220" cy="230" rx="14" ry="8" fill="#e8a830"/>
+        <rect x="206" y="234" width="28" height="5" rx="2" fill="#c88820"/>
+        <circle cx="220" cy="244" r="11" fill="#f5d090"/>
+        <rect x="210" y="255" width="20" height="26" rx="4" fill="#e07030"/>
+        <line x1="210" y1="260" x2="198" y2="270" stroke="#e07030" stroke-width="5" stroke-linecap="round"/>
+        <line x1="230" y1="260" x2="240" y2="268" stroke="#e07030" stroke-width="5" stroke-linecap="round"/>
+        <line x1="212" y1="281" x2="207" y2="292" stroke="#2a3a6a" stroke-width="5" stroke-linecap="round"/>
+        <line x1="228" y1="281" x2="233" y2="292" stroke="#2a3a6a" stroke-width="5" stroke-linecap="round"/>
+        <rect x="199" y="290" width="14" height="6" rx="3" fill="#1a2a4a"/>
+        <rect x="229" y="290" width="14" height="6" rx="3" fill="#1a2a4a"/>
+    </g>
+
+    <!-- Orange toolbox -->
+    <rect x="252" y="262" width="46" height="22" rx="5" fill="#e8a830" stroke="#c88820" stroke-width="1.5"/>
+    <rect x="252" y="262" width="46" height="9"  rx="5" fill="#f0bc40"/>
+    <line x1="252" y1="271" x2="298" y2="271" stroke="#c88820" stroke-width="1.2"/>
+    <line x1="275" y1="262" x2="275" y2="284" stroke="#c88820" stroke-width="1.2"/>
+
+    <!-- Orange cone -->
+    <polygon points="298,284 310,284 307,262" fill="#e87020" opacity=".9"/>
+    <rect x="295" y="282" width="18" height="5" rx="2" fill="#c85810" opacity=".85"/>
+    <rect x="297" y="270" width="13" height="3" rx="1" fill="white" opacity=".7"/>
+
+    <!-- ═══ WORKER 3 (right, blue + wrench) ═══ -->
+    <g class="mv-w3">
+        <ellipse cx="710" cy="218" rx="17" ry="9" fill="#e8a830"/>
+        <rect x="693" y="222" width="34" height="7" rx="3" fill="#c88820"/>
+        <circle cx="710" cy="233" r="13" fill="#f5d090"/>
+        <rect x="699" y="246" width="22" height="30" rx="5" fill="#3a5a9a"/>
+        <line x1="699" y1="252" x2="685" y2="262" stroke="#3a5a9a" stroke-width="6" stroke-linecap="round"/>
+        <line x1="721" y1="252" x2="738" y2="260" stroke="#3a5a9a" stroke-width="6" stroke-linecap="round"/>
+        <rect x="736" y="257" width="26" height="8" rx="4" fill="#8a8a8a"/>
+        <rect x="758" y="255" width="9"  height="12" rx="2" fill="#6a6a6a"/>
+        <line x1="702" y1="276" x2="696" y2="290" stroke="#2a3a6a" stroke-width="6" stroke-linecap="round"/>
+        <line x1="718" y1="276" x2="724" y2="290" stroke="#2a3a6a" stroke-width="6" stroke-linecap="round"/>
+        <rect x="688" y="288" width="16" height="8" rx="3" fill="#1a2a4a"/>
+        <rect x="720" y="288" width="16" height="8" rx="3" fill="#1a2a4a"/>
+    </g>
+
+    </svg>
+    </div><!-- /.mv-illo -->
+
+    <!-- BOTTOM — Content -->
+    <div class="mv-body">
+
+        <?php if ($logoUrl): ?>
+        <div class="mv-logo">
+            <img src="<?= $logoUrl ?>" alt="Logo"/>
+        </div>
+        <?php endif; ?>
+
+        <h1 class="mv-title" style="color:<?= $textColor ?>;"><?= $title ?></h1>
+        <p  class="mv-desc"  style="color:<?= $textColor ?>;"><?= $desc  ?></p>
+
+        <!-- ── Countdown ── -->
+        <?php if ($block->isClockEnabled()): ?>
+        <div class="mv-countdown cs-<?= $clockStyle ?>"
+             id="mv-countdown" data-end="<?= $endTs ?>">
+            <?php foreach (['mv-days'=>"DAY'S",'mv-hours'=>'HOURS','mv-minutes'=>'MINUTES','mv-seconds'=>'SECONDS'] as $id => $lbl): ?>
+            <div class="mv-cd-item">
+                <span class="mv-cd-num" id="<?= $id ?>"
+                      style="background:<?= $clockBg ?>;color:<?= $clockNum ?>;">00</span>
+                <span class="mv-cd-label" style="color:<?= $clockLabel ?>;"><?= __($lbl) ?></span>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── Progress ── -->
+        <?php if ($block->isProgressBarEnabled()): ?>
+        <div class="mv-progress">
+            <div class="mv-progress-header">
+                <span class="mv-progress-title" style="color:<?= $textColor ?>;"><?= __('Work in progress') ?></span>
+                <span class="mv-progress-pct"   style="color:<?= $textColor ?>;"><?= $progressVal ?>%</span>
+            </div>
+            <div class="mv-progress-track">
+                <div class="mv-progress-fill" id="mv-progress-bar"
+                     style="background:<?= $progressClr ?>;"
+                     data-value="<?= $progressVal ?>"></div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── Subscribe ── -->
+        <?php if ($block->isSubscribeEnabled()): ?>
+        <div class="mv-subscribe">
+            <?php if ($subDesc): ?>
+            <p class="mv-sub-desc" style="color:<?= $descClr ?>;"><?= $subDesc ?></p>
+            <?php endif; ?>
+            <div class="mv-sub-form">
+                <input type="email" id="mv-email" class="mv-sub-input"
+                       placeholder="<?= __('Enter your email address') ?>"/>
+                <button type="button" id="mv-subscribe-btn" class="mv-sub-btn"
+                        style="background:<?= $btnBgClr ?>;color:<?= $btnTxtClr ?>;">
+                    <?= $btnLabel ?>
+                </button>
+            </div>
+            <div id="mv-subscribe-msg" class="mv-sub-msg" style="display:none;"></div>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── Social ── -->
+        <?php if ($block->isSocialEnabled() && !empty($socialLinks)): ?>
+        <div class="mv-social">
+            <span class="mv-social-label" style="color:<?= $socialClr ?>;"><?= $socialLabel ?></span>
+            <div class="mv-social-icons">
+                <?php foreach ($socialLinks as $network => $url): ?>
+                <a href="<?= $block->escapeUrl($url) ?>" target="_blank" rel="noopener noreferrer"
+                   class="mv-social-icon social-<?= $block->escapeHtmlAttr($network) ?>"
+                   title="<?= $block->escapeHtmlAttr(ucfirst($network)) ?>">
+                    <?= $block->escapeHtml(ucfirst($network)) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+    </div><!-- /.mv-body -->
+</div><!-- /.mv-card -->
+
+<script>
+window.mvEndTime      = <?= $endTs ?>;
+window.mvSubscribeUrl = '<?= $subUrl ?>';
+window.mvBtnLabel     = '<?= $btnLabel ?>';
+window.mvIsComingSoon = false; // ✅ REQUIRED
+
+/* Animate progress bar on load */
+window.addEventListener('load', function () {
+    var bar = document.getElementById('mv-progress-bar');
+    if (bar) {
+        setTimeout(function () {
+            bar.style.width = bar.getAttribute('data-value') + '%';
+        }, 500);
+    }
+});
+</script>
+<script src="<?= $block->getViewFileUrl('Mavenbird_MaintenancePage::js/countdown.js') ?>"></script>
+</body>
+</html>

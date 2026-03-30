@@ -1,0 +1,824 @@
+<?php
+/** @var \Mavenbird\MaintenancePage\Block\ComingSoon $block */
+$title      = $block->escapeHtml($block->getPageTitle());
+$desc       = $block->escapeHtml($block->getPageDescription());
+$textColor  = $block->escapeHtmlAttr($block->getTextColor());
+$bgType     = $block->getBackgroundType();
+$bgColor    = $block->escapeHtmlAttr($block->getBackgroundColor());
+$bgImage    = $block->escapeUrl($block->getBackgroundImage());
+$bgVideo    = $block->escapeUrl($block->getBackgroundVideo());
+$logoUrl    = $block->escapeUrl($block->getLogoUrl());
+$endTs      = (int) $block->getEndTimestamp();
+$clockBg    = $block->escapeHtmlAttr($block->getClockBgColor());
+$clockNum   = $block->escapeHtmlAttr($block->getClockNumberColor());
+$clockLabel = $block->escapeHtmlAttr($block->getClockLabelColor());
+$btnLabel   = $block->escapeHtml($block->getSubscribeBtnLabel());
+$btnTxtClr  = $block->escapeHtmlAttr($block->getSubscribeBtnTextColor());
+$btnBgClr   = $block->escapeHtmlAttr($block->getSubscribeBtnBgColor());
+$subDesc    = $block->escapeHtml($block->getSubscribeDescription());
+$descClr    = $block->escapeHtmlAttr($block->getSubscribeDescColor());
+$subUrl     = $block->escapeUrl($block->getSubscribeUrl());
+$socialLabel = $block->escapeHtml($block->getSocialLabel());
+$socialClr  = $block->escapeHtmlAttr($block->getSocialLabelColor());
+$socialLinks = $block->getSocialLinks();
+
+if ($bgType === 'image' && $bgImage) {
+    $bgStyle = "background-image:url('{$bgImage}');background-size:cover;background-position:center;";
+} elseif ($bgType === 'color' && $bgColor) {
+    $bgStyle = "background-color:{$bgColor};";
+} else {
+    $bgStyle = "background:linear-gradient(135deg,#0f0c29 0%,#1a1040 40%,#24243e 100%);";
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title><?= $title ?></title>
+<style>
+/* ── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;margin:0!important;padding:0!important}
+
+/* Hide Magento chrome */
+.page-wrapper,.page-header,.nav-sections,.nav-toggle,
+.page-footer,.breadcrumbs,.page-messages,
+.page-title-wrapper,.page-title,h1.page-title,
+.columns,.column.main,.sidebar,.page-main,
+header.page-header,footer.page-footer,
+.page-bottom,.copyright,.panel.header,
+.panel.wrapper,.sections.nav-sections,.navigation{display:none!important}
+
+/* ── PAGE ───────────────────────────────────────────────── */
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+}
+
+/* ── BG VIDEO ───────────────────────────────────────────── */
+.cs-bg-video{
+    position:fixed;top:0;left:0;
+    width:100%;height:100%;
+    object-fit:cover;z-index:-1;
+}
+
+/* ── STAR PARTICLES ─────────────────────────────────────── */
+.cs-stars{
+    position:fixed;inset:0;
+    pointer-events:none;z-index:0;
+    overflow:hidden;
+}
+.cs-star{
+    position:absolute;
+    border-radius:50%;
+    background:white;
+    animation:csTwinkle var(--dur,3s) ease-in-out infinite var(--delay,0s);
+}
+@keyframes csTwinkle{
+    0%,100%{opacity:.15;transform:scale(1)}
+    50%{opacity:1;transform:scale(1.4)}
+}
+
+/* Glowing orbs */
+.cs-orb{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(80px);
+    pointer-events:none;z-index:0;
+    animation:csOrbDrift 12s ease-in-out infinite;
+}
+.cs-orb-1{width:500px;height:500px;background:rgba(120,60,255,.18);top:-15%;left:-10%;animation-delay:0s}
+.cs-orb-2{width:400px;height:400px;background:rgba(60,180,255,.14);bottom:-10%;right:-8%;animation-delay:-5s}
+.cs-orb-3{width:300px;height:300px;background:rgba(255,80,180,.10);top:40%;left:50%;animation-delay:-9s}
+@keyframes csOrbDrift{
+    0%,100%{transform:translate(0,0)}
+    33%{transform:translate(30px,-20px)}
+    66%{transform:translate(-20px,30px)}
+}
+
+/* ── MAIN CARD ──────────────────────────────────────────── */
+.cs-card{
+    position:relative;z-index:10;
+    width:min(95vw,900px);
+    background:rgba(255,255,255,0.05);
+    border-radius:32px;
+    border:1px solid rgba(255,255,255,0.12);
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    box-shadow:
+        0 32px 100px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+    overflow:hidden;
+    animation:csFadeIn .8s cubic-bezier(.16,1,.3,1) both;
+    display:flex;
+    flex-direction:column;
+}
+@keyframes csFadeIn{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:none}}
+
+/* ── ILLUSTRATION (top) ─────────────────────────────────── */
+.cs-illo{
+    width:100%;height:260px;
+    flex-shrink:0;overflow:hidden;
+    position:relative;
+}
+.cs-illo svg{width:100%;height:100%;display:block}
+
+/* ── CONTENT (bottom) ───────────────────────────────────── */
+.cs-body{
+    padding:32px 52px 40px;
+    display:flex;flex-direction:column;
+    align-items:center;gap:20px;text-align:center;
+}
+
+/* ── LOGO ───────────────────────────────────────────────── */
+.cs-logo img{max-width:150px;max-height:58px;object-fit:contain}
+
+/* ── BADGE ──────────────────────────────────────────────── */
+.cs-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:50px;
+    padding:8px 22px;
+    font-size:.82rem;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;
+    color:#ffffff;
+    opacity:1;
+}
+.cs-badge-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:#7c3aed;
+    box-shadow:0 0 8px #7c3aed;
+    animation:csPulse 1.8s ease-in-out infinite;
+}
+@keyframes csPulse{0%,100%{box-shadow:0 0 6px #7c3aed}50%{box-shadow:0 0 18px #a855f7,0 0 30px rgba(168,85,247,.4)}}
+
+/* ── TITLE ──────────────────────────────────────────────── */
+.cs-title{
+    font-size:clamp(2rem,5vw,3.4rem);
+    font-weight:800;
+    letter-spacing:-1px;
+    line-height:1.1;
+    background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.7) 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+}
+/* Fallback if textColor is set */
+.cs-title.has-color{
+    background:none;
+    -webkit-background-clip:unset;
+    -webkit-text-fill-color:unset;
+    background-clip:unset;
+}
+
+/* ── DESC ───────────────────────────────────────────────── */
+.cs-desc{
+    font-size:clamp(1.2rem, 2.5vw, 1.8rem); /* responsive size */
+    line-height:1.8; /* better readability for larger text */
+    color:rgba(255,255,255,0.9); /* slightly clearer */
+    max-width:700px; /* allow more width for bigger text */
+    margin:0 auto; /* center it */
+}
+
+/* ── DIVIDER ────────────────────────────────────────────── */
+.cs-divider{
+    width:60px;height:3px;border-radius:50px;
+    background:linear-gradient(90deg,#7c3aed,#38bdf8);
+    flex-shrink:0;
+}
+
+/* ── COUNTDOWN ──────────────────────────────────────────── */
+.cs-countdown{
+    display:flex;justify-content:center;
+    align-items:center;gap:12px;flex-wrap:wrap;
+}
+.cs-cd-item{
+    display:flex;flex-direction:column;
+    align-items:center;gap:8px;
+}
+.cs-cd-num{
+    display:flex;align-items:center;justify-content:center;
+    width:96px;height:96px;
+    font-size:2.4rem;font-weight:800;
+    border-radius:20px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:0 8px 32px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15);
+    position:relative;overflow:hidden;
+    transition:transform .2s;
+    color:#ffffff;
+}
+.cs-cd-num::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);
+}
+.cs-cd-label{
+    font-size:.72rem;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;
+    color:rgba(255,255,255,.80);
+}
+.cs-cd-sep{
+    font-size:2rem;font-weight:700;
+    color:rgba(255,255,255,.55);
+    margin-bottom:28px;align-self:center;
+}
+
+/* ── PROGRESS ───────────────────────────────────────────── */
+.cs-progress{width:100%;max-width:540px}
+.cs-progress-header{
+    display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:8px;
+}
+.cs-progress-label{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.90);letter-spacing:.5px}
+.cs-progress-pct{font-size:.9rem;font-weight:800;color:#ffffff}
+.cs-progress-track{
+    height:6px;background:rgba(255,255,255,.1);
+    border-radius:50px;overflow:hidden;
+}
+.cs-progress-fill{
+    height:100%;border-radius:50px;width:0;
+    background:linear-gradient(90deg,#7c3aed,#38bdf8);
+    transition:width 1.6s cubic-bezier(.4,0,.2,1);
+    position:relative;overflow:hidden;
+}
+.cs-progress-fill::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+    animation:csShimmer 2s ease-in-out infinite;
+}
+@keyframes csShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* ── SUBSCRIBE ──────────────────────────────────────────── */
+.cs-subscribe{width:100%;max-width:520px}
+.cs-sub-desc{font-size:.9rem;margin-bottom:12px;color:rgba(255,255,255,.88);line-height:1.6}
+.cs-sub-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.cs-sub-input{
+    flex:1;min-width:210px;max-width:310px;
+    padding:13px 22px;
+    border-radius:50px;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.08);
+    font-size:.92rem;color:#fff;outline:none;
+    transition:border-color .2s,background .2s;
+}
+.cs-sub-input::placeholder{color:rgba(255,255,255,.35)}
+.cs-sub-input:focus{
+    border-color:rgba(255,255,255,.4);
+    background:rgba(255,255,255,.12);
+}
+.cs-sub-btn{
+    padding:13px 28px;border-radius:50px;border:none;
+    font-size:.92rem;font-weight:700;cursor:pointer;
+    background:linear-gradient(135deg,#7c3aed,#38bdf8);
+    color:#ffffff !important;letter-spacing:.4px;
+    box-shadow:0 4px 20px rgba(124,58,237,.4);
+    transition:opacity .2s,transform .15s,box-shadow .2s;
+    white-space:nowrap;
+}
+.cs-sub-btn:hover{
+    opacity:.9;transform:translateY(-2px);
+    box-shadow:0 8px 28px rgba(124,58,237,.5);
+}
+.cs-sub-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.cs-sub-msg{
+    margin-top:10px;font-size:.84rem;
+    padding:8px 18px;border-radius:10px;display:inline-block;
+}
+.cs-sub-msg.success{background:rgba(22,163,74,.2);color:#86efac;border:1px solid rgba(22,163,74,.3)}
+.cs-sub-msg.error  {background:rgba(220,38,38,.2);color:#fca5a5;border:1px solid rgba(220,38,38,.3)}
+
+/* ── SOCIAL ─────────────────────────────────────────────── */
+.cs-social-label{
+    display:block;font-size:.78rem;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;
+    color:rgba(255,255,255,.80);margin-bottom:10px;
+}
+.cs-social-icons{display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.cs-social-icon{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:38px;height:38px;border-radius:50%;
+    color:#fff;text-decoration:none;
+    font-size:.56rem;font-weight:700;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.07);
+    transition:transform .2s,opacity .2s,background .2s;
+}
+.cs-social-icon:hover{transform:translateY(-3px);opacity:.95;background:rgba(255,255,255,.14)}
+.social-facebook  {background:#1877f2}
+.social-twitter   {background:#1da1f2}
+.social-instagram {background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.social-youtube   {background:#ff0000}
+.social-pinterest {background:#e60023}
+.social-google    {background:#4285f4}
+
+/* ── SVG ANIMATIONS ─────────────────────────────────────── */
+@keyframes csRocket   {0%,100%{transform:translate(0,0) rotate(-30deg)} 50%{transform:translate(6px,-10px) rotate(-30deg)}}
+@keyframes csOrbit    {from{transform:rotate(0deg)} to{transform:rotate(360deg)}}
+@keyframes csFloat    {0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}}
+@keyframes csBlink    {0%,100%{opacity:.4} 50%{opacity:1}}
+@keyframes csSpin     {from{transform:rotate(0)} to{transform:rotate(360deg)}}
+@keyframes csBeam     {0%,100%{opacity:.15;transform:scaleY(.9)} 50%{opacity:.5;transform:scaleY(1.05)}}
+
+.cs-rocket{animation:csRocket 3s ease-in-out infinite}
+.cs-planet1{animation:csFloat 4s ease-in-out infinite}
+.cs-planet2{animation:csFloat 5.5s ease-in-out infinite .8s}
+.cs-moon   {animation:csFloat 3.5s ease-in-out infinite .4s}
+.cs-star-svg{animation:csBlink var(--bd,2s) ease-in-out infinite var(--bdy,0s)}
+.cs-gear   {animation:csSpin 8s linear infinite;transform-origin:50% 50%}
+.cs-gear-sm{animation:csSpin 5s linear infinite reverse;transform-origin:50% 50%}
+.cs-ring   {animation:csOrbit 12s linear infinite;transform-origin:430px 130px}
+.cs-beam   {animation:csBeam 2.5s ease-in-out infinite}
+.cs-float-card{animation:csFloat 3.5s ease-in-out infinite .5s}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:860px){
+    .cs-body{padding:24px 32px 32px;gap:16px}
+    .cs-cd-num{width:80px;height:80px;font-size:2rem}
+    .cs-illo{height:220px}
+}
+@media(max-width:600px){
+    .cs-illo{height:170px}
+    .cs-body{padding:18px 18px 26px;gap:14px}
+    .cs-title{font-size:1.8rem}
+    .cs-cd-num{width:66px;height:66px;font-size:1.6rem;border-radius:14px}
+    .cs-countdown{gap:8px}
+    .cs-cd-sep{font-size:1.4rem;margin-bottom:20px}
+    .cs-sub-form{flex-direction:column;align-items:stretch}
+    .cs-sub-input{max-width:100%}
+    .cs-sub-btn{width:100%}
+}
+</style>
+</head>
+<body style="<?= $bgStyle ?>">
+
+<?php if ($bgType === 'video' && $bgVideo): ?>
+<video class="cs-bg-video" autoplay muted loop playsinline>
+    <source src="<?= $bgVideo ?>" type="video/mp4"/>
+</video>
+<?php endif; ?>
+
+<!-- Animated background stars -->
+<div class="cs-stars" aria-hidden="true" id="cs-stars"></div>
+
+<!-- Glowing background orbs -->
+<div class="cs-orb cs-orb-1" aria-hidden="true"></div>
+<div class="cs-orb cs-orb-2" aria-hidden="true"></div>
+<div class="cs-orb cs-orb-3" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CARD
+════════════════════════════════════════════ -->
+<div class="cs-card">
+
+    <!-- TOP — Space / rocket illustration -->
+    <div class="cs-illo" aria-hidden="true">
+    <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+        <radialGradient id="csBg" cx="50%" cy="50%" r="70%">
+            <stop offset="0%"   stop-color="#1e1060"/>
+            <stop offset="100%" stop-color="#0a0520"/>
+        </radialGradient>
+        <radialGradient id="csGlow1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#7c3aed" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="csGlow2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#38bdf8" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="csPlanetGrad1" cx="35%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#4c1d95"/>
+        </radialGradient>
+        <radialGradient id="csPlanetGrad2" cx="35%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#7dd3fc"/>
+            <stop offset="100%" stop-color="#0369a1"/>
+        </radialGradient>
+        <radialGradient id="csMoonGrad" cx="35%" cy="35%" r="60%">
+            <stop offset="0%"   stop-color="#fef3c7"/>
+            <stop offset="100%" stop-color="#92400e"/>
+        </radialGradient>
+        <filter id="csGlowF">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="csSoftGlow">
+            <feGaussianBlur stdDeviation="8"/>
+        </filter>
+        <linearGradient id="csBeamGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#38bdf8" stop-opacity=".6"/>
+            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="csRocketBody" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="#e2e8f0"/>
+            <stop offset="100%" stop-color="#94a3b8"/>
+        </linearGradient>
+        <linearGradient id="csTrail" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#f97316" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Space background -->
+    <rect width="860" height="260" fill="url(#csBg)"/>
+
+    <!-- Glow blobs -->
+    <ellipse cx="200" cy="130" rx="180" ry="120" fill="url(#csGlow1)" opacity=".6"/>
+    <ellipse cx="660" cy="130" rx="160" ry="100" fill="url(#csGlow2)" opacity=".6"/>
+
+    <!-- Static background stars (tiny) -->
+    <circle cx="40"  cy="22"  r="1"   fill="white" opacity=".8"/>
+    <circle cx="90"  cy="55"  r=".7"  fill="white" opacity=".6"/>
+    <circle cx="150" cy="18"  r="1.2" fill="white" opacity=".9"/>
+    <circle cx="210" cy="42"  r=".8"  fill="white" opacity=".7"/>
+    <circle cx="280" cy="12"  r="1"   fill="white" opacity=".8"/>
+    <circle cx="350" cy="36"  r=".6"  fill="white" opacity=".5"/>
+    <circle cx="420" cy="8"   r="1.3" fill="white" opacity=".9"/>
+    <circle cx="490" cy="28"  r=".7"  fill="white" opacity=".6"/>
+    <circle cx="560" cy="16"  r="1"   fill="white" opacity=".8"/>
+    <circle cx="630" cy="44"  r=".8"  fill="white" opacity=".7"/>
+    <circle cx="700" cy="10"  r="1.2" fill="white" opacity=".9"/>
+    <circle cx="760" cy="38"  r=".6"  fill="white" opacity=".5"/>
+    <circle cx="820" cy="20"  r="1"   fill="white" opacity=".8"/>
+    <circle cx="65"  cy="110" r=".8"  fill="white" opacity=".6"/>
+    <circle cx="130" cy="145" r="1"   fill="white" opacity=".7"/>
+    <circle cx="195" cy="200" r=".7"  fill="white" opacity=".5"/>
+    <circle cx="720" cy="85"  r=".9"  fill="white" opacity=".7"/>
+    <circle cx="790" cy="130" r=".6"  fill="white" opacity=".5"/>
+    <circle cx="840" cy="70"  r="1.1" fill="white" opacity=".8"/>
+    <circle cx="25"  cy="200" r=".7"  fill="white" opacity=".5"/>
+    <circle cx="810" cy="200" r=".8"  fill="white" opacity=".6"/>
+    <circle cx="750" cy="240" r=".6"  fill="white" opacity=".4"/>
+    <circle cx="100" cy="240" r=".7"  fill="white" opacity=".4"/>
+
+    <!-- Twinkling star 1 -->
+    <g class="cs-star-svg" style="--bd:2.2s;--bdy:0s">
+        <circle cx="320" cy="52" r="2" fill="white"/>
+        <line x1="320" y1="46" x2="320" y2="43" stroke="white" stroke-width="1.2" opacity=".7"/>
+        <line x1="320" y1="58" x2="320" y2="61" stroke="white" stroke-width="1.2" opacity=".7"/>
+        <line x1="314" y1="52" x2="311" y2="52" stroke="white" stroke-width="1.2" opacity=".7"/>
+        <line x1="326" y1="52" x2="329" y2="52" stroke="white" stroke-width="1.2" opacity=".7"/>
+    </g>
+    <!-- Twinkling star 2 -->
+    <g class="cs-star-svg" style="--bd:1.8s;--bdy:-.6s">
+        <circle cx="680" cy="30" r="2.5" fill="white"/>
+        <line x1="680" y1="23" x2="680" y2="20" stroke="white" stroke-width="1.5" opacity=".7"/>
+        <line x1="680" y1="37" x2="680" y2="40" stroke="white" stroke-width="1.5" opacity=".7"/>
+        <line x1="673" y1="30" x2="670" y2="30" stroke="white" stroke-width="1.5" opacity=".7"/>
+        <line x1="687" y1="30" x2="690" y2="30" stroke="white" stroke-width="1.5" opacity=".7"/>
+    </g>
+    <!-- Twinkling star 3 -->
+    <g class="cs-star-svg" style="--bd:3s;--bdy:-.4s">
+        <circle cx="530" cy="200" r="1.8" fill="#fde68a"/>
+        <line x1="530" y1="195" x2="530" y2="193" stroke="#fde68a" stroke-width="1" opacity=".7"/>
+        <line x1="530" y1="205" x2="530" y2="207" stroke="#fde68a" stroke-width="1" opacity=".7"/>
+        <line x1="525" y1="200" x2="523" y2="200" stroke="#fde68a" stroke-width="1" opacity=".7"/>
+        <line x1="535" y1="200" x2="537" y2="200" stroke="#fde68a" stroke-width="1" opacity=".7"/>
+    </g>
+
+    <!-- ═══ PLANET 1 (left, purple) ═══ -->
+    <g class="cs-planet1">
+        <circle cx="148" cy="148" r="58" fill="url(#csPlanetGrad1)"/>
+        <!-- Ring -->
+        <ellipse cx="148" cy="148" rx="82" ry="18" fill="none" stroke="rgba(167,139,250,.5)" stroke-width="10" opacity=".6"/>
+        <!-- Craters -->
+        <circle cx="130" cy="135" r="10" fill="rgba(0,0,0,.18)"/>
+        <circle cx="162" cy="158" r="7"  fill="rgba(0,0,0,.14)"/>
+        <circle cx="142" cy="168" r="5"  fill="rgba(0,0,0,.12)"/>
+        <!-- Shine -->
+        <ellipse cx="136" cy="132" rx="16" ry="10" fill="rgba(255,255,255,.18)" transform="rotate(-20,136,132)"/>
+    </g>
+
+    <!-- ═══ MOON (top right) ═══ -->
+    <g class="cs-moon">
+        <circle cx="740" cy="60" r="35" fill="url(#csMoonGrad)"/>
+        <!-- Craters -->
+        <circle cx="728" cy="50" r="7"  fill="rgba(0,0,0,.15)"/>
+        <circle cx="750" cy="70" r="5"  fill="rgba(0,0,0,.12)"/>
+        <circle cx="735" cy="75" r="3.5" fill="rgba(0,0,0,.1)"/>
+        <!-- Shine -->
+        <ellipse cx="730" cy="50" rx="12" ry="8" fill="rgba(255,255,255,.25)" transform="rotate(-20,730,50)"/>
+    </g>
+
+    <!-- ═══ PLANET 2 (small, right) ═══ -->
+    <g class="cs-planet2">
+        <circle cx="800" cy="190" r="30" fill="url(#csPlanetGrad2)"/>
+        <!-- Shine -->
+        <ellipse cx="791" cy="183" rx="9" ry="6" fill="rgba(255,255,255,.25)" transform="rotate(-20,791,183)"/>
+    </g>
+
+    <!-- ═══ GRID / HORIZON LINE ═══ -->
+    <!-- Futuristic horizon glow at bottom -->
+    <rect x="0" y="230" width="860" height="30" fill="url(#csBeamGrad)" opacity=".3" class="cs-beam"/>
+    <!-- Horizontal lines suggesting a grid -->
+    <line x1="0" y1="245" x2="860" y2="245" stroke="rgba(56,189,248,.2)" stroke-width="1"/>
+    <line x1="0" y1="255" x2="860" y2="255" stroke="rgba(56,189,248,.12)" stroke-width="1"/>
+
+    <!-- ═══ FLOATING LAUNCH PLATFORM ═══ -->
+    <g class="cs-float-card">
+        <!-- Platform base -->
+        <rect x="355" y="195" width="150" height="10" rx="5" fill="#334155"/>
+        <rect x="365" y="185" width="130" height="12" rx="4" fill="#1e293b"/>
+        <!-- Legs -->
+        <rect x="370" y="205" width="8"  height="25" rx="3" fill="#334155"/>
+        <rect x="425" y="205" width="8"  height="25" rx="3" fill="#334155"/>
+        <rect x="482" y="205" width="8"  height="25" rx="3" fill="#334155"/>
+        <!-- Feet -->
+        <rect x="363" y="228" width="22" height="6" rx="3" fill="#475569"/>
+        <rect x="418" y="228" width="22" height="6" rx="3" fill="#475569"/>
+        <rect x="475" y="228" width="22" height="6" rx="3" fill="#475569"/>
+        <!-- Pad lights -->
+        <circle cx="380" cy="185" r="3" fill="#38bdf8" filter="url(#csGlowF)"/>
+        <circle cx="430" cy="185" r="3" fill="#38bdf8" filter="url(#csGlowF)"/>
+        <circle cx="480" cy="185" r="3" fill="#38bdf8" filter="url(#csGlowF)"/>
+        <!-- Glow under platform -->
+        <ellipse cx="430" cy="234" rx="72" ry="6" fill="rgba(56,189,248,.15)"/>
+    </g>
+
+    <!-- ═══ ROCKET ═══ -->
+    <g class="cs-rocket" style="transform-origin:430px 145px">
+        <!-- Engine flame -->
+        <polygon points="415,185 445,185 438,218 422,218" fill="url(#csTrail)" opacity=".9"/>
+        <ellipse cx="430" cy="185" rx="16" ry="5" fill="#f97316" opacity=".8"/>
+        <ellipse cx="430" cy="190" rx="10" ry="3" fill="#fbbf24"/>
+
+        <!-- Body -->
+        <rect x="412" y="130" width="36" height="58" rx="6" fill="url(#csRocketBody)"/>
+        <!-- Nose cone -->
+        <polygon points="412,130 448,130 430,90" fill="#e2e8f0"/>
+        <!-- Nose tip glow -->
+        <ellipse cx="430" cy="94" rx="6" ry="4" fill="rgba(56,189,248,.6)"/>
+        <!-- Window -->
+        <circle cx="430" cy="148" r="11" fill="#0ea5e9"/>
+        <circle cx="430" cy="148" r="8"  fill="#0c4a6e"/>
+        <circle cx="427" cy="145" r="3"  fill="rgba(255,255,255,.5)"/>
+        <!-- Fins -->
+        <polygon points="412,175 390,198 412,188" fill="#94a3b8"/>
+        <polygon points="448,175 470,198 448,188" fill="#94a3b8"/>
+        <!-- Stripe -->
+        <rect x="412" y="160" width="36" height="7" rx="2" fill="#7c3aed" opacity=".8"/>
+        <!-- Flag -->
+        <line x1="448" y1="120" x2="448" y2="108" stroke="#64748b" stroke-width="1.5"/>
+        <rect x="448" y="108" width="14" height="9" rx="1" fill="#7c3aed"/>
+        <!-- Side boosters (small) -->
+        <rect x="397" y="158" width="15" height="28" rx="5" fill="#cbd5e1" opacity=".85"/>
+        <rect x="448" y="158" width="15" height="28" rx="5" fill="#cbd5e1" opacity=".85"/>
+        <ellipse cx="404" cy="186" rx="5" ry="3" fill="#f97316" opacity=".7"/>
+        <ellipse cx="456" cy="186" rx="5" ry="3" fill="#f97316" opacity=".7"/>
+    </g>
+
+    <!-- ═══ FLOATING STATS CARD (right side) ═══ -->
+    <g style="animation:csFloat 4s ease-in-out infinite 1s">
+        <rect x="620" y="125" width="140" height="90" rx="14" fill="rgba(255,255,255,.07)" transform="translate(3,4)"/>
+        <rect x="620" y="125" width="140" height="90" rx="14" fill="rgba(15,12,41,.85)"
+              stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+        <!-- Header -->
+        <rect x="620" y="125" width="140" height="28" rx="14" fill="rgba(124,58,237,.25)"/>
+        <rect x="620" y="141" width="140" height="12" fill="rgba(124,58,237,.25)"/>
+        <circle cx="636" cy="139" r="5" fill="#a78bfa" filter="url(#csGlowF)"/>
+        <text x="647" y="143" font-size="9" fill="rgba(255,255,255,.75)" font-family="sans-serif" font-weight="700">LAUNCH STATS</text>
+
+        <!-- Stats rows -->
+        <text x="632" y="168" font-size="8.5" fill="rgba(255,255,255,.5)" font-family="sans-serif">Systems Online</text>
+        <circle cx="745" cy="164" r="4" fill="#4ade80" filter="url(#csGlowF)"/>
+
+        <text x="632" y="184" font-size="8.5" fill="rgba(255,255,255,.5)" font-family="sans-serif">Fuel Level</text>
+        <rect x="685" y="179" width="60" height="6" rx="3" fill="rgba(255,255,255,.1)"/>
+        <rect x="685" y="179" width="48" height="6" rx="3" fill="#38bdf8"/>
+
+        <text x="632" y="200" font-size="8.5" fill="rgba(255,255,255,.5)" font-family="sans-serif">T-Minus</text>
+        <text x="686" y="200" font-size="8.5" fill="#f97316" font-family="sans-serif" font-weight="700">COUNTING</text>
+    </g>
+
+    <!-- ═══ GEAR (bottom left) ═══ -->
+    <g style="animation:csFloat 6s ease-in-out infinite .2s">
+        <g class="cs-gear" style="transform-origin:95px 205px">
+            <circle cx="95" cy="205" r="22" fill="none" stroke="rgba(124,58,237,.35)" stroke-width="6"/>
+            <circle cx="95" cy="205" r="8"  fill="rgba(124,58,237,.2)"/>
+            <rect x="92" y="180" width="6" height="10" rx="2" fill="rgba(124,58,237,.35)"/>
+            <rect x="92" y="220" width="6" height="10" rx="2" fill="rgba(124,58,237,.35)"/>
+            <rect x="70"  cy="202" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)" x="70" y="202"/>
+            <rect x="110" y="202" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)"/>
+            <rect x="74"  y="185" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)" transform="rotate(45,79,188)"/>
+            <rect x="105" y="218" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)" transform="rotate(45,110,221)"/>
+            <rect x="74"  y="218" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)" transform="rotate(-45,79,221)"/>
+            <rect x="105" y="185" width="10" height="6" rx="2" fill="rgba(124,58,237,.35)" transform="rotate(-45,110,188)"/>
+        </g>
+        <g class="cs-gear-sm" style="transform-origin:120px 230px">
+            <circle cx="120" cy="230" r="13" fill="none" stroke="rgba(56,189,248,.3)" stroke-width="4"/>
+            <circle cx="120" cy="230" r="5"  fill="rgba(56,189,248,.15)"/>
+            <rect x="117" y="215" width="6" height="8" rx="1.5" fill="rgba(56,189,248,.3)"/>
+            <rect x="117" y="237" width="6" height="8" rx="1.5" fill="rgba(56,189,248,.3)"/>
+            <rect x="106" y="227" width="8" height="6" rx="1.5" fill="rgba(56,189,248,.3)"/>
+            <rect x="126" y="227" width="8" height="6" rx="1.5" fill="rgba(56,189,248,.3)"/>
+        </g>
+    </g>
+
+    </svg>
+    </div><!-- /.cs-illo -->
+
+    <!-- BOTTOM — Content -->
+    <div class="cs-body">
+
+        <?php if ($logoUrl): ?>
+        <div class="cs-logo">
+            <img src="<?= $logoUrl ?>" alt="Logo"/>
+        </div>
+        <?php endif; ?>
+
+        <!-- Status badge -->
+        <div class="cs-badge" style="color:<?= $textColor ?>;">
+            <span class="cs-badge-dot"></span>
+            <?= __('We are working hard') ?>
+        </div>
+
+        <h1 class="cs-title<?= $textColor ? ' has-color' : '' ?>"
+            <?= $textColor ? 'style="color:'.$textColor.';"' : '' ?>>
+            <?= $title ?>
+        </h1>
+
+        <div class="cs-divider"></div>
+
+        <p class="cs-desc" style="color:<?= $textColor ?>;"><?= $desc ?></p>
+
+        <!-- ── Countdown ── -->
+        <?php if ($block->isClockEnabled()): ?>
+        <div class="cs-countdown" id="mv-countdown" data-end="<?= $endTs ?>">
+            <div class="cs-cd-item">
+                <span class="cs-cd-num" id="mv-days"
+                      style="<?= $clockBg ? 'background:'.$clockBg.';' : '' ?>color:<?= $clockNum ?: '#fff' ?>;"
+                >00</span>
+                <span class="cs-cd-label" style="color:<?= $clockLabel ?: 'rgba(255,255,255,.80)' ?>;"><?= __('DAYS') ?></span>
+            </div>
+            <span class="cs-cd-sep" style="color:<?= $textColor ?>;">:</span>
+            <div class="cs-cd-item">
+                <span class="cs-cd-num" id="mv-hours"
+                      style="<?= $clockBg ? 'background:'.$clockBg.';' : '' ?>color:<?= $clockNum ?: '#fff' ?>;"
+                >00</span>
+                <span class="cs-cd-label" style="color:<?= $clockLabel ?: 'rgba(255,255,255,.80)' ?>;"><?= __('HOURS') ?></span>
+            </div>
+            <span class="cs-cd-sep" style="color:<?= $textColor ?>;">:</span>
+            <div class="cs-cd-item">
+                <span class="cs-cd-num" id="mv-minutes"
+                      style="<?= $clockBg ? 'background:'.$clockBg.';' : '' ?>color:<?= $clockNum ?: '#fff' ?>;"
+                >00</span>
+                <span class="cs-cd-label" style="color:<?= $clockLabel ?: 'rgba(255,255,255,.80)' ?>;"><?= __('MINUTES') ?></span>
+            </div>
+            <span class="cs-cd-sep" style="color:<?= $textColor ?>;">:</span>
+            <div class="cs-cd-item">
+                <span class="cs-cd-num" id="mv-seconds"
+                      style="<?= $clockBg ? 'background:'.$clockBg.';' : '' ?>color:<?= $clockNum ?: '#fff' ?>;"
+                >00</span>
+                <span class="cs-cd-label" style="color:<?= $clockLabel ?: 'rgba(255,255,255,.80)' ?>;"><?= __('SECONDS') ?></span>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── Progress ── -->
+        <?php if ($block->isProgressBarEnabled()): ?>
+        <div class="cs-progress">
+            <div class="cs-progress-header">
+                <span class="cs-progress-label" style="color:<?= $textColor ?: 'rgba(255,255,255,.90)' ?>;"><?= __('Launch progress') ?></span>
+                <span class="cs-progress-pct"   style="color:<?= $textColor ?: '#ffffff' ?>;"><?= (int)$block->getProgressValue() ?>%</span>
+            </div>
+            <div class="cs-progress-track">
+                <div class="cs-progress-fill" id="mv-progress-bar"
+                     style="<?= $block->getProgressColor() ? 'background:'.$block->escapeHtmlAttr($block->getProgressColor()).';' : '' ?>"
+                     data-value="<?= (int)$block->getProgressValue() ?>"></div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- ── Subscribe ── -->
+     <?php if ($block->isSubscribeEnabled()): ?>
+<div class="cs-subscribe">
+    <?php if ($subDesc): ?>
+    <p class="cs-sub-desc" style="color:<?= $descClr ?>;"><?= $subDesc ?></p>
+    <?php endif; ?>
+
+    <div class="cs-sub-form">
+        <input type="email" id="mv-email" class="cs-sub-input"
+               placeholder="<?= __('Enter your email address') ?>" />
+
+        <input type="hidden" id="form_key" value="<?= $block->getFormKey() ?>" />
+
+        <button type="button" id="mv-subscribe-btn" class="cs-sub-btn"
+                style="<?= $btnBgClr ? 'background:'.$btnBgClr.';' : '' ?>color:<?= $btnTxtClr ?: '#ffffff' ?>;">
+            <?= $btnLabel ?>
+        </button>
+    </div>
+
+    <div id="mv-subscribe-msg" class="cs-sub-msg" style="display:none;"></div>
+</div>
+<?php endif; ?>
+
+        <!-- ── Social ── -->
+        <?php if ($block->isSocialEnabled() && !empty($socialLinks)): ?>
+        <div class="cs-social">
+            <span class="cs-social-label" style="color:<?= $socialClr ?>;"><?= $socialLabel ?></span>
+            <div class="cs-social-icons">
+                <?php foreach ($socialLinks as $network => $url): ?>
+                <a href="<?= $block->escapeUrl($url) ?>" target="_blank" rel="noopener noreferrer"
+                   class="cs-social-icon social-<?= $block->escapeHtmlAttr($network) ?>"
+                   title="<?= $block->escapeHtmlAttr(ucfirst($network)) ?>">
+                    <?= $block->escapeHtml(ucfirst($network)) ?>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+    </div><!-- /.cs-body -->
+</div><!-- /.cs-card -->
+
+<script>
+/* ── Star particles ── */
+(function(){
+    var c = document.getElementById('cs-stars');
+    if (!c) return;
+    for (var i = 0; i < 80; i++) {
+        var s = document.createElement('div');
+        s.className = 'cs-star';
+        var size = Math.random() * 2.5 + .5;
+        s.style.cssText = [
+            'width:'+size+'px','height:'+size+'px',
+            'top:'+Math.random()*100+'%',
+            'left:'+Math.random()*100+'%',
+            '--dur:'+(Math.random()*3+2)+'s',
+            '--delay:-'+(Math.random()*4)+'s',
+            'opacity:'+(Math.random()*.6+.1)
+        ].join(';');
+        c.appendChild(s);
+    }
+})();
+
+/* ── Countdown & subscribe hooks ── */
+window.mvEndTime      = <?= $endTs ?>;
+window.mvSubscribeUrl = '<?= $subUrl ?>';
+window.mvBtnLabel     = '<?= $btnLabel ?>';
+window.mvIsComingSoon = true;
+
+/* Map old countdown IDs used by countdown.js */
+window.addEventListener('load', function () {
+    /* progress bar */
+    var bar = document.getElementById('mv-progress-bar');
+    if (bar) setTimeout(function(){ bar.style.width = bar.getAttribute('data-value')+'%'; }, 600);
+
+    /* subscribe button */
+    var btn = document.getElementById('mv-subscribe-btn');
+    var inp = document.getElementById('mv-email');
+    var msg = document.getElementById('mv-subscribe-msg');
+    if (btn && inp && msg) {
+        btn.addEventListener('click', function () {
+            var email = inp.value.trim();
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                msg.textContent = '<?= __("Please enter a valid email address.") ?>';
+                msg.className = 'cs-sub-msg error';
+                msg.style.display = 'inline-block';
+                return;
+            }
+            btn.disabled = true;
+            btn.textContent = '<?= __("Subscribing...") ?>';
+            fetch(window.mvSubscribeUrl, {
+                method:'POST',
+                headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},
+                body:JSON.stringify({email:email})
+            }).then(function(r){ return r.json(); })
+              .then(function(d){
+                if (d && d.success) {
+                    msg.textContent = d.message || '<?= __("Thank you for subscribing!") ?>';
+                    msg.className = 'cs-sub-msg success';
+                    inp.value = '';
+                } else {
+                    msg.textContent = (d && d.message) || '<?= __("Something went wrong.") ?>';
+                    msg.className = 'cs-sub-msg error';
+                }
+                msg.style.display = 'inline-block';
+                btn.disabled = false;
+                btn.textContent = window.mvBtnLabel;
+              })
+              .catch(function(){
+                msg.textContent = '<?= __("Something went wrong.") ?>';
+                msg.className = 'cs-sub-msg error';
+                msg.style.display = 'inline-block';
+                btn.disabled = false;
+                btn.textContent = window.mvBtnLabel;
+              });
+        });
+    }
+});
+</script>
+<script src="<?= $block->getViewFileUrl('Mavenbird_MaintenancePage::js/countdown.js') ?>">
+    window.mvSubscribeUrl = "<?= $block->getUrl('maintenance/index/subscribe') ?>";
+    window.mvEndTime = "<?= $block->getEndTime() ?>"; // Ensure your block has this method
+</script>
+</body>
+</html>

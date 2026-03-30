@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="mavenbird" translate="label" sortOrder="200">
+            <label>Mavenbird</label>
+        </tab>
+
+        <section id="mavenbird_maintenancepage" translate="label"
+                 sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Maintenance Page</label>
+            <tab>mavenbird</tab>
+            <resource>Mavenbird_MaintenancePage::config</resource>
+
+            <group id="general" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enabled" translate="label" type="select"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="redirect_to_page" translate="label" type="select"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Redirect To Page</label>
+                    <source_model>Mavenbird\MaintenancePage\Model\Config\Source\RedirectPage</source_model>
+                </field>
+                <field id="end_date_time" translate="label" type="text"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>End Date Time</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\DateTimePicker</frontend_model>
+                    <comment><![CDATA[Format: <b>MM/DD/YYYY HH:MM</b> Example: <b>08/20/2025 17:05</b>]]></comment>
+                </field>
+                <field id="auto_switch" translate="label" type="select"
+                       sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Switch to Live Site Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Automatically disables maintenance when End Date Time is reached.</comment>
+                </field>
+               
+                <field id="whitelist_page_links" translate="label comment" type="textarea"
+                       sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Whitelist Page Link(s)</label>
+                    <comment>Separated by line breaks.</comment>
+                </field>
+               
+            </group>
+
+            <group id="maintenance_page" translate="label" sortOrder="20"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Maintenance Page Display Setting</label>
+                <field id="page_title" translate="label" type="text"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Page Title</label>
+                </field>
+                <field id="page_description" translate="label" type="textarea"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Page Description</label>
+                </field>
+                <field id="text_color" translate="label" type="text"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="logo_url" translate="label" type="text"
+                       sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Logo URL</label>
+                </field>
+                <field id="background_type" translate="label" type="select"
+                       sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Type</label>
+                    <source_model>Mavenbird\MaintenancePage\Model\Config\Source\BackgroundType</source_model>
+                </field>
+                <field id="background_color" translate="label" type="text"
+                       sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                    <depends>
+                        <field id="background_type">color</field>
+                    </depends>
+                </field>
+                <field id="background_image" translate="label" type="image"
+                       sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">mavenbird/maintenance</upload_dir>
+                    <base_url type="media" scope_info="1">mavenbird/maintenance</base_url>
+                    <depends>
+                        <field id="background_type">image</field>
+                    </depends>
+                </field>
+                <field id="background_video" translate="label" type="text"
+                       sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Video URL</label>
+                    <depends>
+                        <field id="background_type">video</field>
+                    </depends>
+                </field>
+                <field id="progress_bar_enabled" translate="label" type="select"
+                       sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Progress Bar</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="progress_bar_value" translate="label" type="text"
+                       sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Progress Bar Value (%)</label>
+                    <comment>Enter a number between 0 and 100.</comment>
+                    <depends>
+                        <field id="progress_bar_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="progress_bar_color" translate="label" type="text"
+                       sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Progress Bar Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                    <depends>
+                        <field id="progress_bar_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="preview" translate="label" type="button"
+                       sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Preview</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\Preview</frontend_model>
+                </field>
+            </group>
+
+            <group id="coming_soon_page" translate="label" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Coming Soon Page Display Setting</label>
+                <field id="page_title" translate="label" type="text"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Page Title</label>
+                </field>
+                <field id="page_description" translate="label" type="textarea"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Page Description</label>
+                </field>
+                <field id="text_color" translate="label" type="text"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Text Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="logo_url" translate="label" type="text"
+                       sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Logo URL</label>
+                </field>
+                <field id="background_type" translate="label" type="select"
+                       sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Type</label>
+                    <source_model>Mavenbird\MaintenancePage\Model\Config\Source\BackgroundType</source_model>
+                </field>
+                <field id="background_color" translate="label" type="text"
+                       sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                    <depends>
+                        <field id="background_type">color</field>
+                    </depends>
+                </field>
+                <field id="background_image" translate="label" type="image"
+                       sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Image</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">mavenbird/comingsoon</upload_dir>
+                    <base_url type="media" scope_info="1">mavenbird/comingsoon</base_url>
+                    <depends>
+                        <field id="background_type">image</field>
+                    </depends>
+                </field>
+                <field id="background_video" translate="label" type="text"
+                       sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Background Video URL</label>
+                    <depends>
+                        <field id="background_type">video</field>
+                    </depends>
+                </field>
+                <field id="progress_bar_enabled" translate="label" type="select"
+                       sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Progress Bar</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="progress_bar_value" translate="label" type="text"
+                       sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Progress Bar Value (%)</label>
+                    <comment>Enter a number between 0 and 100.</comment>
+                    <depends>
+                        <field id="progress_bar_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="progress_bar_color" translate="label" type="text"
+                       sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Progress Bar Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                    <depends>
+                        <field id="progress_bar_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="preview" translate="label" type="button"
+                       sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Preview</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\Preview</frontend_model>
+                </field>
+            </group>
+
+            <group id="clock" translate="label" sortOrder="40"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Clock Setting</label>
+                <field id="enabled" translate="label" type="select"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="style" translate="label" type="select"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Countdown Clock Style</label>
+                    <source_model>Mavenbird\MaintenancePage\Model\Config\Source\ClockStyle</source_model>
+                </field>
+                <field id="background_color" translate="label" type="text"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Clock Background Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="number_color" translate="label" type="text"
+                       sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Clock Number Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="label_color" translate="label" type="text"
+                       sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Label Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+            </group>
+
+            <group id="subscribe" translate="label" sortOrder="50"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Subscribe Setting</label>
+                <field id="enabled" translate="label" type="select"
+                       sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="subscription_type" translate="label" type="select"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Subscription Type</label>
+                    <source_model>Mavenbird\MaintenancePage\Model\Config\Source\SubscriptionType</source_model>
+                </field>
+                <field id="description" translate="label" type="textarea"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Subscription Description</label>
+                </field>
+                <field id="description_text_color" translate="label" type="text"
+                       sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description Text Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="button_label" translate="label" type="text"
+                       sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Button Label</label>
+                    <comment>Better less than 15 characters.</comment>
+                </field>
+                <field id="button_text_color" translate="label" type="text"
+                       sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Button Text Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+                <field id="button_background_color" translate="label" type="text"
+                       sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Button Background Color</label>
+                    <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+                </field>
+            </group>
+
+          <group id="social" translate="label" sortOrder="60"
+       showInDefault="1" showInWebsite="1" showInStore="1">
+    <label>Social Contact</label>
+
+    <!-- Preview of social icons -->
+    <field id="icons_preview" translate="label" type="note"
+           sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Social Icons Preview</label>
+        <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\SocialIcons</frontend_model>
+    </field>
+
+    <!-- Enable -->
+    <field id="enabled" translate="label" type="select"
+           sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Enable</label>
+        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+    </field>
+
+    <!-- Label -->
+    <field id="label" translate="label" type="text"
+           sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Label</label>
+    </field>
+
+    <!-- Label Color -->
+    <field id="label_color" translate="label" type="text"
+           sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Label Color</label>
+        <frontend_model>Mavenbird\MaintenancePage\Block\Adminhtml\System\Config\ColorPicker</frontend_model>
+    </field>
+
+    <!-- Social Links -->
+    <field id="facebook" translate="label" type="text"
+           sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Facebook Page Link</label>
+    </field>
+    <field id="twitter" translate="label" type="text"
+           sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Twitter Page Link</label>
+    </field>
+    <field id="instagram" translate="label" type="text"
+           sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Instagram Page Link</label>
+    </field>
+    <field id="google_plus" translate="label" type="text"
+           sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Google+ Page Link</label>
+    </field>
+    <field id="youtube" translate="label" type="text"
+           sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Youtube Page Link</label>
+    </field>
+    <field id="pinterest" translate="label" type="text"
+           sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Pinterest Page Link</label>
+    </field>
+</group>
+        </section>
+    </system>
+</config>

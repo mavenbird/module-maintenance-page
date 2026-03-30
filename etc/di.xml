@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Mavenbird\MaintenancePage\Observer\MaintenanceObserver">
+        <arguments>
+            <argument name="helper"            xsi:type="object">Mavenbird\MaintenancePage\Helper\Data</argument>
+            <argument name="response"          xsi:type="object">Magento\Framework\App\Response\Http</argument>
+            <argument name="request"           xsi:type="object">Magento\Framework\App\RequestInterface</argument>
+            <argument name="url"               xsi:type="object">Magento\Framework\UrlInterface</argument>
+            <argument name="configWriter"      xsi:type="object">Magento\Framework\App\Config\Storage\WriterInterface</argument>
+            <argument name="cacheTypeList"     xsi:type="object">Magento\Framework\App\Cache\TypeListInterface</argument>
+            <argument name="cacheFrontendPool" xsi:type="object">Magento\Framework\App\Cache\Frontend\Pool</argument>
+        </arguments>
+    </type>
+
+</config>
