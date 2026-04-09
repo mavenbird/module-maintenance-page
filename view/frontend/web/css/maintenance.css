@@ -1,30 +1,37 @@
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;margin:0!important;padding:0!important}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-/* Hide Magento chrome */
-.page-wrapper,.page-header,.nav-sections,.nav-toggle,
-.page-footer,.breadcrumbs,.page-messages,
-.page-title-wrapper,.page-title,h1.page-title,
-.columns,.column.main,.sidebar,.page-main,
-header.page-header,footer.page-footer,
-.page-bottom,.copyright,.panel.header,
-.panel.wrapper,.sections.nav-sections,.navigation, .nav-toggle{display:none!important}
+.page-title-wrapper,
+.page-title,
+h1.page-title,
+.column.main > h1,
+.page-main > .page-title-wrapper,
+.page-header,
+.nav-sections,
+.nav-toggle {
+    display: none !important;
+}
 
 html, body {
-    width: 100%; height:100%;
+    width: 100%;
     min-height: 100vh;
     margin: 0 !important;
     padding: 0 !important;
 }
 
 body {
-    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    min-height:100vh;
-    position:relative;
-    overflow:hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative;
+    overflow-x: hidden;
 }
 
 /* BACKGROUND VIDEO */
@@ -137,7 +144,28 @@ body {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+/* ── RESET ───────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;margin:0!important;padding:0!important}
 
+/* Hide Magento chrome */
+.page-wrapper,.page-header,.nav-sections,.nav-toggle,
+.page-footer,.breadcrumbs,.page-messages,
+.page-title-wrapper,.page-title,h1.page-title,
+.columns,.column.main,.sidebar,.page-main,
+header.page-header,footer.page-footer,
+.page-bottom,.copyright,.panel.header,
+.panel.wrapper,.sections.nav-sections,.navigation{display:none!important}
+
+body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    position:relative;
+    overflow:hidden;
+}
 /* ────────────────────── Mavenbird_Maintenance_page ───────────────────────────── */
 /* ── BG VIDEO ────────────────────────────────────────────── */
 .mb-bg-video{
@@ -484,7 +512,7 @@ body {
 
 /* ── DESC ───────────────────────────────────────────────── */
 .cs-desc{
-    font-size:clamp(1.2rem, 2.5vw, 1rem); 
+    font-size:clamp(1.4rem, 2.5vw, 1.2rem); 
     line-height:1.8; 
     color:rgba(255,255,255,0.9); 
     max-width:700px; 
@@ -592,10 +620,10 @@ body {
     padding:8px 18px; border-radius:10px; display:inline-block;
 }
 .cs-sub-msg.success{background:rgba(22,163,74,.2);color:#86efac;border:1px solid rgba(22,163,74,.3)}
-.cs-sub-msg.error  {background:rgba(220,38,38,.2);color:#b26565;border:1px solid rgba(220,38,38,.3)}
+.cs-sub-msg.error  {background:rgb(248 205 205);color:#f31010;border:1px solid rgba(220,38,38,.3)}
 
 /* ── SOCIAL ─────────────────────────────────────────────── */
-.cs-social { margin-top: 20px; }
+.cs-social { margin-top: 40px; }
 .cs-social-label{
     display:block; font-size:15px; font-weight:700;
     letter-spacing:1.5px;text-transform:uppercase;
@@ -658,19 +686,19 @@ body {
 
 /* ── Mavenbird_Maintenance_page RESPONSIVE ──────────────────────────────────────────── */
 @media(max-width:860px){
-    .mb-body{padding:22px 32px 28px;gap:14px}
-    .mb-cd-num{width:72px;height:72px;font-size:1.7rem}
-    .mb-illo{height:240px}
+    .mv-body{padding:22px 32px 28px;gap:14px}
+    .mv-cd-num{width:72px;height:72px;font-size:1.7rem}
+    .mv-illo{height:240px}
 }
 @media(max-width:600px){
-    .mb-illo{height:180px}
-    .mb-body{padding:18px 18px 24px;gap:12px}
-    .mb-cd-num{width:60px;height:60px;font-size:1.4rem}
-    .mb-countdown{gap:8px}
-    .mb-sub-form{flex-direction:column;align-items:stretch}
-    .mb-sub-input{max-width:100%}
-    .mb-sub-btn{width:100%}
-    .cs-stack .mb-cd-item{width:100%}
+    .mv-illo{height:180px}
+    .mv-body{padding:18px 18px 24px;gap:12px}
+    .mv-cd-num{width:60px;height:60px;font-size:1.4rem}
+    .mv-countdown{gap:8px}
+    .mv-sub-form{flex-direction:column;align-items:stretch}
+    .mv-sub-input{max-width:100%}
+    .mv-sub-btn{width:100%}
+    .cs-stack .mv-cd-item{width:100%}
 }
 /* MOBILE */
 @media (max-width: 600px) {
